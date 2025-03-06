@@ -3,6 +3,8 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const connectDb = require("./config/db")
+const routes = require("./src/routes/subscriptionRoutes");
+const { startMonitoring } = require("./src/services/blockchain/ethereumService");
 
 const app = express();
 
@@ -10,8 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 connectDb();
+app.use("/api", routes);
 
-// app.use('/api');
+startMonitoring();
 
 const PORT = process.env.PORT || 5000;
 
