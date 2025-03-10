@@ -1,11 +1,11 @@
 const Subscription = require("../../models/Subscription");
 
-const findSubscription = async (email) => {
-    return Subscription.findOne({userEmail: email});    
+const findSubscription = async (email, walletAddress, chain) => {
+    return Subscription.findOne({userEmail: email, walletAddress, chain});    
 }
 
-const addSubscription = async (email, walletAddress, alertThreshold) => {
-    return Subscription.create({userEmail: email, walletAddress, alertThreshold});
+const addSubscription = async (email, walletAddress, alertThreshold, chain) => {
+    return Subscription.create({userEmail: email, walletAddress, alertThreshold, chain});
 }
 
 const unsubscribeWallet = async (email, walletAddress) => {

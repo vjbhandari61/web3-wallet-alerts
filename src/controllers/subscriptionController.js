@@ -1,17 +1,23 @@
 const { unsubscribeWallet, addSubscription, findSubscription } = require("../services/subscription/subscriptionService");
 const { monitorAddress } = require("../services/blockchain/ethereumService");
+const Subscription = require("../models/Subscription");
+const { monitorSolanaAddress } = require("../services/blockchain/solanaService");
 
 const subscribe = async (req, res) => {
-    const { email, walletAddress, alertThreshold } = req.body;
+    const { email, walletAddress, alertThreshold, chain } = req.body;
 
     try {
-        const subscription = await findSubscription(email);
-        if (!subscription) {
-            await addSubscription(email, walletAddress, alertThreshold);
-            await monitorAddress(walletAddress);
-            return res.status(201).json({ message: "Subscription added successfully!" });
+        const subscription = await findSubscription(email, walletAddress, chain);
+        if(!subscription){
+            await Subscription.create({ userEmail: email, walletAddress, alertThreshold, chain });
         }
-        return res.status(400).json({ message: "Subscription already exists!" });
+        if(chain == "eth") {
+            await monitorAddress(walletAddress);
+        } else {
+            await monitorSolanaAddress(walletAddress)
+        }
+
+        return res.status(201).json({ message: "Subscription created successfully!" });
     } catch (error) {
         console.log("Error: ", error);
         return res.status(500).json({ error: "Failed to create subscription." });

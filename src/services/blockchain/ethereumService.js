@@ -19,7 +19,7 @@ const monitorAddress = async (address) => {
             const transactionDetails = await provider.getTransaction(tx);
             if (transactionDetails && transactionDetails.to && transactionDetails.to.toLowerCase() === address.toLowerCase()) {
                 console.log("Transaction to address found:", transactionDetails.to);
-                const subscriptions = await Subscription.find({ walletAddress: address });
+                const subscriptions = await Subscription.find({ walletAddress: address, chain: "eth" });
                 for (const subscription of subscriptions) {
                     const message = `Transaction detected for ${address}: ${transactionDetails.hash}`;
                     await sendEmail(subscription.userEmail, "Wallet Alert", message);
@@ -30,7 +30,7 @@ const monitorAddress = async (address) => {
 };
 
 const startMonitoring = async () => {
-    const subscriptions = await Subscription.find();
+    const subscriptions = await Subscription.find({ chain: "eth" });
     subscriptions.forEach(sub => monitorAddress(sub.walletAddress));
 };
 

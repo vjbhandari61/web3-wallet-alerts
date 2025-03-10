@@ -1,20 +1,22 @@
 # On-Chain Email Alert System
 
 ## Overview
-On-Chain Email Alerts is a real-time notification system that allows users to subscribe to specific wallet addresses on the Ethereum blockchain. Users receive email alerts whenever funds are sent to or received from their subscribed addresses. This project utilizes Node.js, Express.js, MongoDB, and Ethers.js for blockchain interaction.
+On-Chain Email Alerts is a real-time notification system that allows users to subscribe to specific wallet addresses on the Ethereum and Solana blockchains. Users receive email alerts whenever funds are sent to or received from their subscribed addresses. This project utilizes Node.js, Express.js, MongoDB, and Ethers.js for Ethereum interaction, as well as Solana Web3.js for Solana interaction.
 
 ## Features
-- Users can subscribe to any Ethereum wallet address.
+- Users can subscribe to any Ethereum or Solana wallet address.
 - Real-time monitoring of incoming and outgoing transactions.
 - Email notifications sent via Nodemailer or SendGrid.
 - Users can set an alert threshold to filter notifications based on transaction amounts.
 - Unsubscribe option to stop notifications.
+- Prevents duplicate subscriptions for the same user and wallet address.
 
 ## Tech Stack
 - **Backend**: Node.js, Express.js
-- **Blockchain Interaction**: Ethers.js
+- **Blockchain Interaction**: Ethers.js (Ethereum), Solana Web3.js (Solana)
 - **Database**: MongoDB
-- **Email Notifications**: Nodemailer
+- **Email Notifications**: Nodemailer / SendGrid
+- **Environment Variables**: dotenv
 
 ## Installation
 
@@ -58,12 +60,12 @@ On-Chain Email Alerts is a real-time notification system that allows users to su
   {
     "email": "user@example.com",
     "walletAddress": "0xYourWalletAddress",
-    "alertThreshold": 0
+    "chain": "eth"
   }
   ```
 - **Response**:
-  - **201 Created**: Subscription added successfully.
-  - **400 Bad Request**: Subscription already exists.
+  - **201 Created**: Subscription created successfully.
+  - **400 Bad Request**: Subscription already exists for this address.
   - **500 Internal Server Error**: Failed to create subscription.
 
 ### Unsubscribe from Wallet Address
@@ -84,3 +86,4 @@ On-Chain Email Alerts is a real-time notification system that allows users to su
 2. If not, it starts monitoring the address for incoming and outgoing transactions.
 3. When a transaction is detected, the application checks if it meets the user's alert threshold.
 4. If the conditions are met, an email notification is sent to the user.
+5. Duplicate subscriptions for the same user and wallet address are prevented.

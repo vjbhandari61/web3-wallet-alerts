@@ -5,6 +5,7 @@ const express = require("express");
 const connectDb = require("./config/db")
 const routes = require("./src/routes/subscriptionRoutes");
 const { startMonitoring } = require("./src/services/blockchain/ethereumService");
+const { startSolanaMonitoring } = require("./src/services/blockchain/solanaService");
 
 const app = express();
 
@@ -15,6 +16,7 @@ connectDb();
 app.use("/api", routes);
 
 startMonitoring();
+startSolanaMonitoring();
 
 const PORT = process.env.PORT || 5000;
 
